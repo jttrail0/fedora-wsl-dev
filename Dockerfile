@@ -18,6 +18,11 @@ RUN sudo useradd -u 1000 -g wheel -s /usr/bin/zsh user && \
 COPY zshrc /home/user/.zshrc
 RUN chmod 0600 /home/user/.zshrc
 
+## add nvim config
+COPY init.vim /home/user/.config/nvim/init.vim
+RUN chmod 0600 /home/user/.config/nvim/init.vim && \
+	nvim --headless +PlugInstall +qall
+
 ## Classic snap
 RUN sudo ln -s /var/lib/snapd/snap /snap
 
