@@ -34,7 +34,7 @@ USER user
 WORKDIR /home/user
 
 ## Download & install powerline-go, dircolors
-RUN mkdir -p local/bin/ && \
+RUN mkdir -p .local/bin/ && \
 	wget -O /home/user/.local/bin/powerline-go https://github.com/justjanne/powerline-go/releases/latest/download/powerline-go-linux-amd64 && \
 	wget -O /home/user/.dir_colors https://raw.githubusercontent.com/seebi/dircolors-solarized/master/dircolors.ansi-dark
 
