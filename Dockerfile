@@ -23,7 +23,10 @@ RUN chmod 0600 /home/user/.zshrc
 
 ## add nvim config
 COPY init.vim /home/user/.config/nvim/init.vim
-RUN chmod 0600 /home/user/.config/nvim/init.vim && \
+COPY coc-settings.json /home/user/.vim/coc-settings.json
+RUN chmod 0640 /home/user/.config/nvim/init.vim && \
+	chmod 0640 /home/user/.vim/ && \
+	chmod 0640 /home/user/.vim/coc-settings.json && \
 	nvim --headless +PlugInstall +qall && \
 	nvim --headless +CocInstall coc-pyright && \
 	nvim --headless +CocInstall coc-markdownlint && \
