@@ -1,13 +1,16 @@
 FROM fedora:34
 
 RUN dnf -y install \
+	dnf-plugins-core \
 	openssh-clients sudo \
 	git git-secret \
 	zsh zsh-syntax-highlighting zsh-autosuggestions fontconfig \
 	wget rsync \
 	neovim \
 	python3-pip \
-        snapd
+        snapd jq  && \
+    dnf config-manager --add-repo https://rpm.releases.hashicorp.com/fedora/hashicorp.repo && \
+    dnf install -y terraform terraform-ls
 
 # create user
 RUN sudo useradd -u 1000 -g wheel -s /usr/bin/zsh user && \
@@ -27,7 +30,7 @@ RUN chmod 0600 /home/user/.config/nvim/init.vim && \
 RUN sudo ln -s /var/lib/snapd/snap /snap
 
 ### Install snaps
-RUN sudo snap install kubectl glab
+RUN sudo snap install kubectl glab yq
 
 ## Run as user
 USER user
@@ -39,9 +42,15 @@ RUN mkdir -p .local/bin/ && \
 	wget -O /home/user/.dir_colors https://raw.githubusercontent.com/seebi/dircolors-solarized/master/dircolors.ansi-dark
 
 ### Download & install s5cmd
- RUN curl -sL https://api.github.com/repos/peak/s5cmd/releases/latest \
+RUN curl -sL https://api.github.com/repos/peak/s5cmd/releases/latest \
  	| grep -i Linux-64bit.tar.gz \
  	| grep browser_download_url \
    	| cut -d '"' -f 4 \
  	| wget -O s5cmd.tar.gz -qi  - && \
  	tar --extract --file=s5cmd.tar.gz /home/user/.local/bin/s5cmd
+
+### Pip packages
+RUN pip3 install python-gitlab pyyaml jinja2 toml
+
+### Terraform install
+RUN terraform -install-autocomplete
