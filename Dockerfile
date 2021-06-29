@@ -24,7 +24,11 @@ RUN chmod 0600 /home/user/.zshrc
 ## add nvim config
 COPY init.vim /home/user/.config/nvim/init.vim
 RUN chmod 0600 /home/user/.config/nvim/init.vim && \
-	nvim --headless +PlugInstall +qall
+	nvim --headless +PlugInstall +qall && \
+	nvim --headless +CocInstall coc-pyright && \
+	nvim --headless +CocInstall coc-markdownlint && \
+	nvim --headless +CocInstall coc-yaml && \
+	nvim --headless +CocInstall coc-json 
 
 ## Classic snap
 RUN sudo ln -s /var/lib/snapd/snap /snap
