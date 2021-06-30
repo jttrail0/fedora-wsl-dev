@@ -56,7 +56,17 @@ RUN curl -sL https://api.github.com/repos/peak/s5cmd/releases/latest \
  	| grep browser_download_url \
    	| cut -d '"' -f 4 \
  	| wget -O s5cmd.tar.gz -qi  - && \
- 	tar --extract --file=s5cmd.tar.gz /home/user/.local/bin/s5cmd
+ 	tar -xf s5cmd.tar.gz s5cmd -C /home/user/.local/bin/s5cmd &&\
+        rm s5cmd.tar.gz
+
+### Installs Glab https://github.com/profclems/glab
+RUN curl -sL https://api.github.com/repos/profclems/glab/releases/latest \
+        | grep -i Linux_x86_64.tar.gz \
+        | grep browser_download_url \
+        | cut -d '"' -f 4 \
+        | wget -O glab.tar.gz -qi  - && \
+        tar -xf glab.tar.gz -C $HOME/.local/bin/ --strip-components=1 bin/glab && \
+        rm glab.tar.gz
 
 ### Pip packages
 RUN pip3 install python-gitlab pyyaml jinja2 toml
