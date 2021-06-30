@@ -18,12 +18,12 @@ RUN sudo useradd -u 1000 -g wheel -s /usr/bin/zsh user && \
 
 # After user creation 
 ## Copy .zshrc to /home/user
-COPY zshrc /home/user/.zshrc
+COPY --chown=user zshrc /home/user/.zshrc
 RUN chmod 0600 /home/user/.zshrc
 
 ## add nvim config
-COPY init.vim /home/user/.config/nvim/init.vim
-COPY coc-settings.json /home/user/.vim/coc-settings.json
+COPY --chown=user init.vim /home/user/.config/nvim/init.vim
+COPY --chown=user coc-settings.json /home/user/.vim/coc-settings.json
 RUN chmod 0640 /home/user/.config/nvim/init.vim && \
 	chmod 0640 /home/user/.vim/ && \
 	chmod 0640 /home/user/.vim/coc-settings.json
