@@ -3,6 +3,10 @@ export SHELL=/bin/zsh
 bindkey -v
 export KEYTIMEOUT=1
 
+# ZSH autoload completions
+autoload -Uz compinit
+compinit
+
 # ZSH highlighting
 source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
@@ -50,7 +54,7 @@ alias rm='rm -I --preserve-root'
 
 # powerline-go config
 function powerline_precmd() {
-    PS1="$($HOME/bin/powerline-go \
+    PS1="$($HOME/.local/bin/powerline-go \
 	    -mode flat \
 	    -error $? \
 	    -max-width 95 \
@@ -67,6 +71,6 @@ function install_powerline_precmd() {
   precmd_functions+=(powerline_precmd)
 }
 
-if [ "$TERM" != "linux" ] && [ -f "$HOME/bin/powerline-go" ]; then
+if [ "$TERM" != "linux" ] && [ -f "$HOME/.local/bin/powerline-go" ]; then
     install_powerline_precmd
 fi
