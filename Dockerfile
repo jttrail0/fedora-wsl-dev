@@ -26,12 +26,11 @@ COPY init.vim /home/user/.config/nvim/init.vim
 COPY coc-settings.json /home/user/.vim/coc-settings.json
 RUN chmod 0640 /home/user/.config/nvim/init.vim && \
 	chmod 0640 /home/user/.vim/ && \
-	chmod 0640 /home/user/.vim/coc-settings.json && \
-	nvim --headless +PlugInstall +qall && \
-	nvim --headless +CocInstall coc-pyright && \
-	nvim --headless +CocInstall coc-markdownlint && \
-	nvim --headless +CocInstall coc-yaml && \
-	nvim --headless +CocInstall coc-json 
+	chmod 0640 /home/user/.vim/coc-settings.json
+RUN sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
+       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+RUN nvim --headless +PlugInstall +qall
+RUN nvim --headless "+CocInstall coc-pyright coc-markdown coc-yaml coc-json" +qa
 
 ## Classic snap
 RUN sudo ln -s /var/lib/snapd/snap /snap
