@@ -8,12 +8,13 @@ RUN dnf -y install \
 	wget rsync \
 	neovim \
 	python3-pip \
-        snapd jq  && \
+        jq  && \
     dnf config-manager --add-repo https://rpm.releases.hashicorp.com/fedora/hashicorp.repo && \
-    dnf install -y terraform terraform-ls
+    dnf config-manager --add-repo https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64 && \
+    dnf install -y terraform terraform-ls kubectl
 
 # create user
-RUN sudo useradd -u 1000 -g wheel -s /usr/bin/zsh user && \
+RUN sudo useradd -u 1000 -G wheel -s /usr/bin/zsh user && \
 	sudo sed -i 's/^#\s*\(%wheel\s\+ALL=(ALL)\s\+NOPASSWD:\s\+ALL\)/\1/' /etc/sudoers 
 
 # After user creation 
@@ -24,9 +25,11 @@ RUN chmod 0600 /home/user/.zshrc
 ## add nvim config
 COPY --chown=user init.vim /home/user/.config/nvim/init.vim
 COPY --chown=user coc-settings.json /home/user/.vim/coc-settings.json
-RUN chmod 0640 /home/user/.config/nvim/init.vim && \
-	chmod 0640 /home/user/.vim/ && \
-	chmod 0640 /home/user/.vim/coc-settings.json
+RUN chmod 0750 /home/user/.vim/ && \
+    chmod 0640 /home/user/.config/nvim/init.vim && \
+    chmod 0750 /home/user/.config/ && \
+    chmod 0750 /home/user/.config/nvim && \
+    chmod 0640 /home/user/.vim/coc-settings.json
 RUN sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 RUN nvim --headless +PlugInstall +qall
