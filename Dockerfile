@@ -75,12 +75,11 @@ RUN pip3 install python-gitlab pyyaml jinja2 toml yq
 RUN terraform -install-autocomplete && \
     mkdir -p $HOME/.terraform.d/plugin-cache && \
     chmod 750 $HOME/.terraform.d  && \
-	cat << EOF > $HOME/.terraformrc 
-	plugin_cache_dir   = "$HOME/.terraform.d/plugin-cache"
-	disable_checkpoint = true
-    EOF
+	echo 'plugin_cache_dir = "$HOME/.terraform.d/plugin-cache"' >> $HOME/.terraformrc && \
+	echo 'disable_checkpoint = true' >> $HOME/.terraformrc
 
-COPY --chown=user main.tf $HOME/project/main.tf
-RUN terraform init -chdir=$HOME/project/ && /
-	rm -rf $HOME/project
+
+COPY --chown=user main.tf /home/user/project/main.tf
+RUN terraform -chdir=/home/user/project init 
+RUN rm -rf $HOME/project
 
