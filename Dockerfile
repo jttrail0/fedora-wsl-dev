@@ -72,4 +72,15 @@ RUN curl -LO https://dl.k8s.io/release/v1.21.0/bin/linux/amd64/kubectl && \
 RUN pip3 install python-gitlab pyyaml jinja2 toml yq
 
 ### Terraform install
-RUN terraform -install-autocomplete
+RUN terraform -install-autocomplete && \
+    mkdir -p $HOME/.terraform.d/plugin-cache && \
+    chmod 750 $HOME/.terraform.d  && \
+	cat << EOF > $HOME/.terraformrc 
+	plugin_cache_dir   = "$HOME/.terraform.d/plugin-cache"
+	disable_checkpoint = true
+    EOF
+
+COPY --chown=user main.tf $HOME/project/main.tf
+RUN terraform init -chdir=$HOME/project/ && /
+	rm -rf $HOME/project
+
