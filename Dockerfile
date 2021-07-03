@@ -79,7 +79,3 @@ RUN terraform -install-autocomplete && \
 	echo 'disable_checkpoint = true' >> $HOME/.terraformrc
 
 
-COPY --chown=user main.tf /home/user/project/main.tf
-RUN terraform -chdir=/home/user/project init 
-RUN rm -rf $HOME/project
-
